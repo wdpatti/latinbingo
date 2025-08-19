@@ -470,8 +470,22 @@ def draw_bingo_on_template(card, template_path, output_path, bingo_start_y=950):
     return output_path
 
 def main():
-    """Generate 12 individual bingo cards on templates."""
+    """Generate individual bingo cards on templates."""
     try:
+        # Get number of cards from user with default of 12
+        user_input = input("How many bingo cards would you like to generate? (default: 12): ").strip()
+        if user_input == "":
+            num_cards = 12
+        else:
+            try:
+                num_cards = int(user_input)
+                if num_cards <= 0:
+                    print("Number of cards must be positive. Using default of 12.")
+                    num_cards = 12
+            except ValueError:
+                print("Invalid input. Using default of 12.")
+                num_cards = 12
+        
         # Create finals directory if it doesn't exist
         os.makedirs('finals', exist_ok=True)
         
@@ -479,9 +493,9 @@ def main():
         squares = parse_bingo_file('bingo.txt')
         print(f"Loaded {len(squares)} bingo squares")
         
-        # Generate 12 unique bingo cards
-        for i in range(1, 13):
-            print(f"Generating bingo card {i}/12...")
+        # Generate unique bingo cards
+        for i in range(1, num_cards + 1):
+            print(f"Generating bingo card {i}/{num_cards}...")
             
             # Create a unique bingo card
             card = create_bingo_card(squares)
@@ -492,7 +506,7 @@ def main():
             
             print(f"Saved: {output_filename}")
         
-        print(f"\nAll 12 bingo cards generated successfully in the 'finals' folder!")
+        print(f"\nAll {num_cards} bingo cards generated successfully in the 'finals' folder!")
         
     except FileNotFoundError as e:
         print(f"Error: Required file not found - {e}")
